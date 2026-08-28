@@ -8,7 +8,7 @@ st.set_page_config(
 )
 
 st.title("🎨 AI Text to Image Generator")
-st.write("Enter a text prompt and generate an image using AI.")
+st.write("Enter a text prompt and generate an AI image.")
 
 @st.cache_resource
 def load_model():
@@ -19,21 +19,16 @@ def load_model():
     pipe = pipe.to("cpu")
     return pipe
 
-prompt = st.text_area(
+prompt = st.text_input(
     "Enter your prompt",
-    placeholder="A cute white cat sitting in a beautiful flower garden",
-    height=100
+    placeholder="A beautiful sunset over a mountain lake"
 )
 
-if st.button("🎨 Generate Image"):
-
-    if prompt.strip() == "":
+if st.button("Generate Image"):
+    if not prompt.strip():
         st.warning("Please enter a prompt.")
-
     else:
-
-        with st.spinner("Generating your image..."):
-
+        with st.spinner("Generating image..."):
             try:
                 pipe = load_model()
 
@@ -43,6 +38,8 @@ if st.button("🎨 Generate Image"):
                     guidance_scale=0.0
                 ).images[0]
 
+                st.success("Image generated successfully!")
+
                 st.image(
                     image,
                     caption="Generated Image",
@@ -50,5 +47,5 @@ if st.button("🎨 Generate Image"):
                 )
 
             except Exception as e:
-                st.error("An error occurred while generating the image.")
+                st.error("Image generation failed.")
                 st.exception(e)
